@@ -14,7 +14,7 @@ CREATE TABLE "services" (
 );
 
 CREATE TABLE "comments" (
-  "id" bigint PRIMARY KEY,
+  "id" bigserial PRIMARY KEY,
   "comment_content" text NOT NULL,
   "service_id" bigint NOT NULL,
   "created_at" timestamp NOT NULL DEFAULT (now())

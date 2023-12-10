@@ -66,7 +66,7 @@ func TestListServices(t *testing.T) {
 
 	for _, service := range services {
 		require.NotEmpty(t, service)
-		require.Equal(t, category.ID, service.ServiceCategory)
+		require.Equal(t, arg.ServiceCategory, service.ServiceCategory)
 	}
 
 }
