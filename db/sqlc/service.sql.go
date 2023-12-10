@@ -69,3 +69,49 @@ func (q *Queries) GetService(ctx context.Context, id int64) (Service, error) {
 	)
 	return i, err
 }
+
+const listServices = `-- name: ListServices :many
+SELECT id, service_image, service_title, service_category, star, recipe, price FROM services
+WHERE
+    service_category = $1
+ORDER BY id
+LIMIT $2
+OFFSET $3
+`
+
+type ListServicesParams struct {
+	ServiceCategory int64 `json:"service_category"`
+	Limit           int32 `json:"limit"`
+	Offset          int32 `json:"offset"`
+}
+
+func (q *Queries) ListServices(ctx context.Context, arg ListServicesParams) ([]Service, error) {
+	rows, err := q.db.QueryContext(ctx, listServices, arg.ServiceCategory, arg.Limit, arg.Offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []Service{}
+	for rows.Next() {
+		var i Service
+		if err := rows.Scan(
+			&i.ID,
+			&i.ServiceImage,
+			&i.ServiceTitle,
+			&i.ServiceCategory,
+			&i.Star,
+			&i.Recipe,
+			&i.Price,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}

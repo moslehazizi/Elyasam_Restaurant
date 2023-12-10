@@ -17,6 +17,7 @@ type Querier interface {
 	GetService(ctx context.Context, id int64) (Service, error)
 	ListCategories(ctx context.Context, arg ListCategoriesParams) ([]Category, error)
 	ListComments(ctx context.Context, arg ListCommentsParams) ([]Comment, error)
+	ListServices(ctx context.Context, arg ListServicesParams) ([]Service, error)
 }
 
 var _ Querier = (*Queries)(nil)

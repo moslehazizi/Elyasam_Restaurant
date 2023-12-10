@@ -13,7 +13,7 @@ INSERT INTO services(
 SELECT * FROM services
 WHERE id = $1 LIMIT 1;
 
--- NAME: LsitServices :many
+-- name: ListServices :many
 SELECT * FROM services
 WHERE
     service_category = $1
