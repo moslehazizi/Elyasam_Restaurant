@@ -7,7 +7,7 @@ INSERT INTO services(
     price
 ) VALUES (
     $1, $2, $3, $4, $5
-) RUTURNING *;
+) RETURNING *;
 
 -- name: GetService :one
 SELECT * FROM services
