@@ -8,6 +8,7 @@ import (
 )
 
 func (server *Server) getLanding(c *gin.Context) {
+
 	arg := db.ListCategoriesParams{
 		Limit:  19,
 		Offset: 0,
@@ -17,7 +18,20 @@ func (server *Server) getLanding(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, errorResponse(err_1))
 		return
 	}
-
 	c.JSON(http.StatusOK, categories)
 
+	for _, category := range categories{
+		arg := db.ListServicesParams{
+			ServiceCategory: category.ID,
+			Limit: 5,
+			Offset: 0,
+		}
+		var err error
+		services_for_category, err := server.store.ListServices(c, arg)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+		}
+		c.JSON(http.StatusOK, services_for_category)
+	}	
 }
