@@ -15,6 +15,7 @@ func NewServer(store db.Store) *Server {
 	router := gin.Default()
 
 	router.GET("/shop", server.getLanding)
+	router.GET("/shop/detail/:id", server.getSeerviceById)
 
 	server.router = router
 	return server
