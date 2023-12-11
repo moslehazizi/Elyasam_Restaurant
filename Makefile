@@ -34,4 +34,7 @@ sqlc: # nc_4
 run: # Run program
 	go run main.go
 
+test: # Test CRUD in database
+	go test -v -cover ./...
+
 .PHONY: migratefilesup postgres postgresstop postgresstart postgresdown createdb dropdb execdb migrateup migratedown sqlc run
