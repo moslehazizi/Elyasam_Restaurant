@@ -5,9 +5,9 @@ name: ci-test
 
 on:
   push:
-    branches: [ database ]
+    branches: [ "database" ]
   pull_request:
-    branches: [ database ]
+    branches: [ "database" ]
 
 jobs:
 
@@ -21,7 +21,7 @@ jobs:
         env:
           POSTGRES_USER: mosleh
           POSTGRES_PASSWORD: 1234
-          POSTGRES_DB: Elyasam_Reataurant
+          POSTGRES_DB: Elyasam_Restaurant
         ports: 
           - 5432:5432
         options: >-
@@ -42,7 +42,7 @@ jobs:
     - name: Install golang-migrate
       run: |
         curl -L https://github.com/golang-migrate/migrate/releases/download/v4.16.2/migrate.linux-amd64.tar.gz | tar xvz
-        sudo mv migrate /usr/bin/
+        sudo mv migrate /usr/bin/migrate
         which migrate
 
     - name: Run migrations
