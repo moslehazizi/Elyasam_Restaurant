@@ -9,13 +9,17 @@ import (
 )
 
 func createRandomCategory(t *testing.T) Category{
-	category_title := util.RandomName()
-	category, err := testQueries.CreateCategory(context.Background(), category_title)
+	arg := CreateCategoryParams{
+		CategoryTitle: util.RandomName(),
+		CategoryIcon: util.RandomName(),
+	}
+	category, err := testQueries.CreateCategory(context.Background(), arg)
 
 	require.NoError(t, err)
 	require.NotEmpty(t, category)
 
-	require.Equal(t, category_title, category.CategoryTitle)
+	require.Equal(t, arg.CategoryTitle, category.CategoryTitle)
+	require.Equal(t, arg.CategoryIcon, category.CategoryIcon)
 	require.NotZero(t, category.ID)
 
 	return category
@@ -34,6 +38,7 @@ func TestGetCategory(t *testing.T) {
 	require.NotZero(t, category_2.ID)
 	require.Equal(t, category_1.ID, category_2.ID)
 	require.Equal(t, category_1.CategoryTitle, category_2.CategoryTitle)
+	require.Equal(t, category_1.CategoryIcon, category_2.CategoryIcon)
 }
 
 func TestListCategories(t *testing.T) {

@@ -10,7 +10,7 @@ import (
 
 func createRandomService(t *testing.T, category Category) Service {
 	arg := CreateServiceParams{
-		ServiceImage:    util.RandomBytes(10),
+		ServiceImage:    util.RandomName(),
 		ServiceTitle:    util.RandomName(),
 		ServiceCategory: category.ID,
 		Recipe:          util.RandomName(),

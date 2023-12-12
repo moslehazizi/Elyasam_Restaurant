@@ -11,33 +11,39 @@ import (
 
 const createCategory = `-- name: CreateCategory :one
 INSERT INTO categories(
-    category_title
+    category_title,
+    category_icon
 ) VALUES (
-    $1
-) RETURNING id, category_title
+    $1, $2
+) RETURNING id, category_title, category_icon
 `
 
-func (q *Queries) CreateCategory(ctx context.Context, categoryTitle string) (Category, error) {
-	row := q.db.QueryRowContext(ctx, createCategory, categoryTitle)
+type CreateCategoryParams struct {
+	CategoryTitle string `json:"category_title"`
+	CategoryIcon  string `json:"category_icon"`
+}
+
+func (q *Queries) CreateCategory(ctx context.Context, arg CreateCategoryParams) (Category, error) {
+	row := q.db.QueryRowContext(ctx, createCategory, arg.CategoryTitle, arg.CategoryIcon)
 	var i Category
-	err := row.Scan(&i.ID, &i.CategoryTitle)
+	err := row.Scan(&i.ID, &i.CategoryTitle, &i.CategoryIcon)
 	return i, err
 }
 
 const getCategory = `-- name: GetCategory :one
-SELECT id, category_title FROM categories
+SELECT id, category_title, category_icon FROM categories
 WHERE id = $1 LIMIT 1
 `
 
 func (q *Queries) GetCategory(ctx context.Context, id int64) (Category, error) {
 	row := q.db.QueryRowContext(ctx, getCategory, id)
 	var i Category
-	err := row.Scan(&i.ID, &i.CategoryTitle)
+	err := row.Scan(&i.ID, &i.CategoryTitle, &i.CategoryIcon)
 	return i, err
 }
 
 const listCategories = `-- name: ListCategories :many
-SELECT id, category_title FROM categories
+SELECT id, category_title, category_icon FROM categories
 ORDER BY id
 LIMIT $1
 OFFSET $2
@@ -57,7 +63,7 @@ func (q *Queries) ListCategories(ctx context.Context, arg ListCategoriesParams) 
 	items := []Category{}
 	for rows.Next() {
 		var i Category
-		if err := rows.Scan(&i.ID, &i.CategoryTitle); err != nil {
+		if err := rows.Scan(&i.ID, &i.CategoryTitle, &i.CategoryIcon); err != nil {
 			return nil, err
 		}
 		items = append(items, i)

@@ -23,7 +23,7 @@ func (server *Server) getLanding(c *gin.Context) {
 	for _, category := range categories{
 		arg := db.ListServicesParams{
 			ServiceCategory: category.ID,
-			Limit: 5,
+			Limit: 20,
 			Offset: 0,
 		}
 		var err error

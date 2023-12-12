@@ -1,11 +1,12 @@
 CREATE TABLE "categories" (
   "id" BIGSERIAL PRIMARY KEY,
-  "category_title" varchar NOT NULL
+  "category_title" varchar NOT NULL,
+  "category_icon" varchar NOT NULL
 );
 
 CREATE TABLE "services" (
   "id" BIGSERIAL PRIMARY KEY,
-  "service_image" bytea NOT NULL,
+  "service_image" varchar NOT NULL,
   "service_title" varchar NOT NULL,
   "service_category" bigint NOT NULL,
   "star" int NOT NULL DEFAULT 0,
