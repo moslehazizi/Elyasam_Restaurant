@@ -9,7 +9,7 @@ import (
 )
 
 type Querier interface {
-	CreateCategory(ctx context.Context, categoryTitle string) (Category, error)
+	CreateCategory(ctx context.Context, arg CreateCategoryParams) (Category, error)
 	CreateComment(ctx context.Context, arg CreateCommentParams) (Comment, error)
 	CreateService(ctx context.Context, arg CreateServiceParams) (Service, error)
 	GetCategory(ctx context.Context, id int64) (Category, error)

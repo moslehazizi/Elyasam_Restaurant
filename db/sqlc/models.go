@@ -11,6 +11,7 @@ import (
 type Category struct {
 	ID            int64  `json:"id"`
 	CategoryTitle string `json:"category_title"`
+	CategoryIcon  string `json:"category_icon"`
 }
 
 type Comment struct {
@@ -22,7 +23,7 @@ type Comment struct {
 
 type Service struct {
 	ID              int64  `json:"id"`
-	ServiceImage    []byte `json:"service_image"`
+	ServiceImage    string `json:"service_image"`
 	ServiceTitle    string `json:"service_title"`
 	ServiceCategory int64  `json:"service_category"`
 	Star            int32  `json:"star"`

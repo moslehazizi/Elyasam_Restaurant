@@ -22,7 +22,7 @@ INSERT INTO services(
 `
 
 type CreateServiceParams struct {
-	ServiceImage    []byte `json:"service_image"`
+	ServiceImage    string `json:"service_image"`
 	ServiceTitle    string `json:"service_title"`
 	ServiceCategory int64  `json:"service_category"`
 	Recipe          string `json:"recipe"`

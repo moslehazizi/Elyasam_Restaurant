@@ -6,7 +6,7 @@ import (
 )
 
 type Server struct {
-	store db.Store
+	store  db.Store
 	router *gin.Engine
 }
 
@@ -16,6 +16,9 @@ func NewServer(store db.Store) *Server {
 
 	router.GET("/shop", server.getLanding)
 	router.GET("/shop/detail/:id", server.getSeerviceById)
+
+	router.POST("post/category", server.postCategory)
+	router.POST("post/service", server.postService)
 
 	server.router = router
 	return server

@@ -1,8 +1,9 @@
 -- name: CreateCategory :one
 INSERT INTO categories(
-    category_title
+    category_title,
+    category_icon
 ) VALUES (
-    $1
+    $1, $2
 ) RETURNING *;
 
 -- name: GetCategory :one
