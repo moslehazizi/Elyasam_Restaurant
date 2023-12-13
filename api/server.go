@@ -18,7 +18,7 @@ func NewServer(store db.Store) *Server {
 	router.GET("/shop/detail/:id", server.getSeerviceById)
 
 	router.POST("post/category", server.postCategory)
-	router.POST("post/service", server.postService)
+	router.POST("post/service/:id", server.postService)
 
 	server.router = router
 	return server

@@ -36,25 +36,34 @@ func (server *Server) getSeerviceById(c *gin.Context) {
 type postServiceRequest struct {
 	ServiceImage    string `json:"service_image" binding:"required"`
 	ServiceTitle    string `json:"service_title" binding:"required"`
-	ServiceCategory int64  `json:"service_category" binding:"required"`
+	// ServiceCategory int64  `json:"service_category" binding:"required, min=1"`
 	Recipe          string `json:"recipe" binding:"required"`
 	Price           int64  `json:"price" binding:"required"`
 }
 
-func (server *Server) postService (c *gin.Context) {
+type postServiceRequestCategory struct{
+	ID int64 `uri:"id" binding:"required,min=1"`
+}
+func (server *Server) postService(c *gin.Context) {
 	var req postServiceRequest
-	arg := db.CreateServiceParams{
-		ServiceImage: req.ServiceImage,
-		ServiceTitle: req.ServiceTitle,
-		ServiceCategory: req.ServiceCategory,
-		Recipe: req.Recipe,
-		Price: req.Price,
-	}
-
+	var reqC postServiceRequestCategory
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, errorResponse(err))
 		return
 	}
+	if err := c.ShouldBindUri(&reqC); err != nil{
+		c.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+	arg := db.CreateServiceParams{
+		ServiceImage:    req.ServiceImage,
+		ServiceTitle:    req.ServiceTitle,
+		ServiceCategory: reqC.ID,
+		Recipe:          req.Recipe,
+		Price:           req.Price,
+	}
+
+	
 	service, err := server.store.CreateService(c, arg)
 
 	if err != nil {

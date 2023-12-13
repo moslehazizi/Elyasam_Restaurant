@@ -37,4 +37,7 @@ run: # Run program
 test: # Test CRUD in database
 	go test -v -cover ./...
 
+mock:
+	mockgen -package mockdb -destination db/mock/store.go github.com/moslehazizi/Elyasam_Restaurant/db/sqlc Store
+
 .PHONY: migratefilesup postgres postgresstop postgresstart postgresdown createdb dropdb execdb migrateup migratedown sqlc run
