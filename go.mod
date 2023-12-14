@@ -1,6 +1,6 @@
 module github.com/moslehazizi/Elyasam_Restaurant
 
-go 1.23
+go 1.21.4
 
 require (
 	github.com/bytedance/sonic v1.9.1 // indirect
