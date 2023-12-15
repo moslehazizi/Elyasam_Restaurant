@@ -40,4 +40,7 @@ test: # Test CRUD in database
 mock:
 	mockgen -package mockdb -destination db/mock/store.go github.com/moslehazizi/Elyasam_Restaurant/db/sqlc Store
 
-.PHONY: migratefilesup postgres postgresstop postgresstart postgresdown createdb dropdb execdb migrateup migratedown sqlc run
+backup:
+	docker exec -t postgresElyasamRestaurant pg_dumpall -c -U mosleh > dump_`date +%d-%m-%Y"_"%H_%M_%S`.sql
+
+.PHONY: migratefilesup postgres postgresstop postgresstart postgresdown createdb dropdb execdb migrateup migratedown sqlc run mock backup
