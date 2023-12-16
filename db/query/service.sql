@@ -21,6 +21,12 @@ ORDER BY id
 LIMIT $2
 OFFSET $3;
 
+-- name: ListServicesById :many
+SELECT * FROM services
+ORDER BY id
+LIMIT $1
+OFFSET $2;
+
 -- name: UpdateService :one
 UPDATE services
     set service_image = $2,

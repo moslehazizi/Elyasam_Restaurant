@@ -18,6 +18,7 @@ type Querier interface {
 	ListCategories(ctx context.Context, arg ListCategoriesParams) ([]Category, error)
 	ListComments(ctx context.Context, arg ListCommentsParams) ([]Comment, error)
 	ListServices(ctx context.Context, arg ListServicesParams) ([]Service, error)
+	ListServicesById(ctx context.Context, arg ListServicesByIdParams) ([]Service, error)
 	UpdateService(ctx context.Context, arg UpdateServiceParams) (Service, error)
 }
 
