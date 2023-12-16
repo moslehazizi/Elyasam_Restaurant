@@ -41,6 +41,7 @@ func NewServer(store db.Store) *Server {
 
 	router.POST("post/category", server.postCategory)
 	router.POST("post/service/:id", server.postService)
+	router.POST("post/slider_image", server.postSliderImage)
 	
 	router.PUT("put/service/:id", server.putService)
 
