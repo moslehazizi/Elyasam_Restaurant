@@ -54,8 +54,8 @@ ALTER ROLE mosleh WITH SUPERUSER INHERIT CREATEROLE CREATEDB LOGIN REPLICATION B
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 16.1 (Debian 16.1-1.pgdg120+1)
--- Dumped by pg_dump version 16.1 (Debian 16.1-1.pgdg120+1)
+-- Dumped from database version 15.4 (Debian 15.4-1.pgdg120+1)
+-- Dumped by pg_dump version 15.4 (Debian 15.4-1.pgdg120+1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -139,8 +139,8 @@ GRANT CONNECT ON DATABASE template1 TO PUBLIC;
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 16.1 (Debian 16.1-1.pgdg120+1)
--- Dumped by pg_dump version 16.1 (Debian 16.1-1.pgdg120+1)
+-- Dumped from database version 15.4 (Debian 15.4-1.pgdg120+1)
+-- Dumped by pg_dump version 15.4 (Debian 15.4-1.pgdg120+1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -204,7 +204,7 @@ CREATE SEQUENCE public.categories_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.categories_id_seq OWNER TO mosleh;
+ALTER TABLE public.categories_id_seq OWNER TO mosleh;
 
 --
 -- Name: categories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: mosleh
@@ -239,13 +239,48 @@ CREATE SEQUENCE public.comments_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.comments_id_seq OWNER TO mosleh;
+ALTER TABLE public.comments_id_seq OWNER TO mosleh;
 
 --
 -- Name: comments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: mosleh
 --
 
 ALTER SEQUENCE public.comments_id_seq OWNED BY public.comments.id;
+
+
+--
+-- Name: discount_offers; Type: TABLE; Schema: public; Owner: mosleh
+--
+
+CREATE TABLE public.discount_offers (
+    id bigint NOT NULL,
+    service_id bigint NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    expired_at timestamp with time zone DEFAULT (now() + '08:00:00'::interval) NOT NULL
+);
+
+
+ALTER TABLE public.discount_offers OWNER TO mosleh;
+
+--
+-- Name: discount_offers_id_seq; Type: SEQUENCE; Schema: public; Owner: mosleh
+--
+
+CREATE SEQUENCE public.discount_offers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.discount_offers_id_seq OWNER TO mosleh;
+
+--
+-- Name: discount_offers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: mosleh
+--
+
+ALTER SEQUENCE public.discount_offers_id_seq OWNED BY public.discount_offers.id;
 
 
 --
@@ -289,13 +324,46 @@ CREATE SEQUENCE public.services_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.services_id_seq OWNER TO mosleh;
+ALTER TABLE public.services_id_seq OWNER TO mosleh;
 
 --
 -- Name: services_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: mosleh
 --
 
 ALTER SEQUENCE public.services_id_seq OWNED BY public.services.id;
+
+
+--
+-- Name: slider_images; Type: TABLE; Schema: public; Owner: mosleh
+--
+
+CREATE TABLE public.slider_images (
+    id bigint NOT NULL,
+    image_path character varying NOT NULL
+);
+
+
+ALTER TABLE public.slider_images OWNER TO mosleh;
+
+--
+-- Name: slider_images_id_seq; Type: SEQUENCE; Schema: public; Owner: mosleh
+--
+
+CREATE SEQUENCE public.slider_images_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.slider_images_id_seq OWNER TO mosleh;
+
+--
+-- Name: slider_images_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: mosleh
+--
+
+ALTER SEQUENCE public.slider_images_id_seq OWNED BY public.slider_images.id;
 
 
 --
@@ -313,10 +381,24 @@ ALTER TABLE ONLY public.comments ALTER COLUMN id SET DEFAULT nextval('public.com
 
 
 --
+-- Name: discount_offers id; Type: DEFAULT; Schema: public; Owner: mosleh
+--
+
+ALTER TABLE ONLY public.discount_offers ALTER COLUMN id SET DEFAULT nextval('public.discount_offers_id_seq'::regclass);
+
+
+--
 -- Name: services id; Type: DEFAULT; Schema: public; Owner: mosleh
 --
 
 ALTER TABLE ONLY public.services ALTER COLUMN id SET DEFAULT nextval('public.services_id_seq'::regclass);
+
+
+--
+-- Name: slider_images id; Type: DEFAULT; Schema: public; Owner: mosleh
+--
+
+ALTER TABLE ONLY public.slider_images ALTER COLUMN id SET DEFAULT nextval('public.slider_images_id_seq'::regclass);
 
 
 --
@@ -351,6 +433,14 @@ COPY public.categories (id, category_title, category_icon) FROM stdin;
 --
 
 COPY public.comments (id, comment_content, service_id, created_at) FROM stdin;
+\.
+
+
+--
+-- Data for Name: discount_offers; Type: TABLE DATA; Schema: public; Owner: mosleh
+--
+
+COPY public.discount_offers (id, service_id, created_at, expired_at) FROM stdin;
 \.
 
 
@@ -398,6 +488,8 @@ COPY public.services (id, service_image, service_title, service_category, star, 
 28	./media/services/5/2.jpg	چلو کره زعفرانی / Chloe Saffron Butter	5	0	برنج ...	65000
 29	./media/services/5/3.jpg	گردن اعیونی / Ayeuni neck	5	0	برنج. گردن ...	450000
 30	./media/services/5/4_1.jpg	ماهیچه شاندیزی / Shandizi muscle	5	0	برنج. ماهیچه ...	490000
+103	./media/services/19/4.jpg	A-110	19	0	--	3000000
+104	./media/services/19/5.jpg	A-112	19	0	--	3500000
 31	./media/general.png	اورنج سلمن	6	0	فیله سلمن تنوری به همراه سس پرتقال بادام، کراکت سیب زمینی، سالاد کینوا، سالسا انبه	380000
 32	./media/general.png	تی بن استیک	6	0	برش دنده گوساله با استخوان به همراه سس مجیک تریاکی، سالاد سبزیجات گرم، سیب تنوری	320000
 33	./media/general.png	چری چیکن	6	0	سینه مرغ جا افتاده در سس چری به همراه کراکت سیب زمینی، سبزیجات سوته شده	250000
@@ -428,6 +520,8 @@ COPY public.services (id, service_image, service_title, service_category, star, 
 57	./media/services/10/3.jpg	اسپرسو سینگل / Single espresso	10	0	قهوه بلند شده Coffee has risen	85000
 58	./media/services/10/4.jpg	کاپوچینو / Cappuccino	10	0	قهوه، شیر Coffee, milk	78000
 59	./media/services/10/5.jpg	کارامل ماکیاتو / Caramel Macchiato	10	0	قهوه، شیر، سس کارامل Coffee, milk, caramel sauce	85000
+105	./media/services/19/6.jpg	A-114	19	0	--	3500000
+106	./media/services/19/7.jpg	E-102	19	0	--	1500000
 60	./media/services/10/6.jpg	کافه بیچرين/ Beauty Cafe	10	0	قهوه، شیر، هات چاکلت، خامه Coffee, milk, caramel sauce	93000
 61	./media/services/10/7.jpg	کورتادو / Cortado	10	0	شیر، قهوه، دارچین Milk, coffee, cinnamon	88000
 62	./media/services/10/8_1.jpg	لته / Latte	10	0	قهوه، شیر Coffee, milk	88000
@@ -470,10 +564,6 @@ COPY public.services (id, service_image, service_title, service_category, star, 
 100	./media/services/19/1.jpg	A-104	19	0	--	3500000
 101	./media/services/19/2.jpg	A-106	19	0	--	4500000
 102	./media/services/19/3.jpg	A-108	19	0	--	4500000
-103	./media/services/19/4.jpg	A-110	19	0	--	3000000
-104	./media/services/19/5.jpg	A-112	19	0	--	3500000
-105	./media/services/19/6.jpg	A-114	19	0	--	3500000
-106	./media/services/19/7.jpg	E-102	19	0	--	1500000
 107	./media/services/19/8.jpg	E-105	19	0	--	3000000
 108	./media/services/19/9.jpg	E-107	19	0	--	2000000
 109	./media/services/19/10.jpg	L-203	19	0	--	4500000
@@ -495,6 +585,19 @@ COPY public.services (id, service_image, service_title, service_category, star, 
 
 
 --
+-- Data for Name: slider_images; Type: TABLE DATA; Schema: public; Owner: mosleh
+--
+
+COPY public.slider_images (id, image_path) FROM stdin;
+1	./media/slider/1.webp
+2	./media/slider/2.webp
+3	./media/slider/3.webp
+4	./media/slider/4.webp
+5	./media/slider/5.webp
+\.
+
+
+--
 -- Name: categories_id_seq; Type: SEQUENCE SET; Schema: public; Owner: mosleh
 --
 
@@ -509,10 +612,24 @@ SELECT pg_catalog.setval('public.comments_id_seq', 1, false);
 
 
 --
+-- Name: discount_offers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: mosleh
+--
+
+SELECT pg_catalog.setval('public.discount_offers_id_seq', 1, false);
+
+
+--
 -- Name: services_id_seq; Type: SEQUENCE SET; Schema: public; Owner: mosleh
 --
 
-SELECT pg_catalog.setval('public.services_id_seq', 123, true);
+SELECT pg_catalog.setval('public.services_id_seq', 1, false);
+
+
+--
+-- Name: slider_images_id_seq; Type: SEQUENCE SET; Schema: public; Owner: mosleh
+--
+
+SELECT pg_catalog.setval('public.slider_images_id_seq', 5, true);
 
 
 --
@@ -532,6 +649,14 @@ ALTER TABLE ONLY public.comments
 
 
 --
+-- Name: discount_offers discount_offers_pkey; Type: CONSTRAINT; Schema: public; Owner: mosleh
+--
+
+ALTER TABLE ONLY public.discount_offers
+    ADD CONSTRAINT discount_offers_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: mosleh
 --
 
@@ -545,6 +670,14 @@ ALTER TABLE ONLY public.schema_migrations
 
 ALTER TABLE ONLY public.services
     ADD CONSTRAINT services_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: slider_images slider_images_pkey; Type: CONSTRAINT; Schema: public; Owner: mosleh
+--
+
+ALTER TABLE ONLY public.slider_images
+    ADD CONSTRAINT slider_images_pkey PRIMARY KEY (id);
 
 
 --
@@ -562,10 +695,24 @@ CREATE INDEX comments_id_idx ON public.comments USING btree (id);
 
 
 --
+-- Name: discount_offers_id_idx; Type: INDEX; Schema: public; Owner: mosleh
+--
+
+CREATE INDEX discount_offers_id_idx ON public.discount_offers USING btree (id);
+
+
+--
 -- Name: services_service_category_idx; Type: INDEX; Schema: public; Owner: mosleh
 --
 
 CREATE INDEX services_service_category_idx ON public.services USING btree (service_category);
+
+
+--
+-- Name: slider_images_id_idx; Type: INDEX; Schema: public; Owner: mosleh
+--
+
+CREATE INDEX slider_images_id_idx ON public.slider_images USING btree (id);
 
 
 --
@@ -577,11 +724,11 @@ ALTER TABLE ONLY public.comments
 
 
 --
--- Name: services services_service_category_fkey; Type: FK CONSTRAINT; Schema: public; Owner: mosleh
+-- Name: discount_offers discount_offers_service_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: mosleh
 --
 
-ALTER TABLE ONLY public.services
-    ADD CONSTRAINT services_service_category_fkey FOREIGN KEY (service_category) REFERENCES public.categories(id);
+ALTER TABLE ONLY public.discount_offers
+    ADD CONSTRAINT discount_offers_service_id_fkey FOREIGN KEY (service_id) REFERENCES public.services(id);
 
 
 --
@@ -596,8 +743,8 @@ ALTER TABLE ONLY public.services
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 16.1 (Debian 16.1-1.pgdg120+1)
--- Dumped by pg_dump version 16.1 (Debian 16.1-1.pgdg120+1)
+-- Dumped from database version 15.4 (Debian 15.4-1.pgdg120+1)
+-- Dumped by pg_dump version 15.4 (Debian 15.4-1.pgdg120+1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -644,8 +791,8 @@ SET row_security = off;
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 16.1 (Debian 16.1-1.pgdg120+1)
--- Dumped by pg_dump version 16.1 (Debian 16.1-1.pgdg120+1)
+-- Dumped from database version 15.4 (Debian 15.4-1.pgdg120+1)
+-- Dumped by pg_dump version 15.4 (Debian 15.4-1.pgdg120+1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
