@@ -37,4 +37,13 @@ run: # Run program
 test: # Test CRUD in database
 	go test -v -cover ./...
 
-.PHONY: migratefilesup postgres postgresstop postgresstart postgresdown createdb dropdb execdb migrateup migratedown sqlc run
+mock:
+	mockgen -package mockdb -destination db/mock/store.go github.com/moslehazizi/Elyasam_Restaurant/db/sqlc Store
+
+backup:
+	docker exec -t postgresElyasamRestaurant pg_dumpall -c -U mosleh > dump_`date +%d-%m-%Y"_"%H_%M_%S`.sql
+
+restore: # every time to restore a specific backup file must replace with your_dump.sql
+	cat your_dump.sql | docker exec -i postgresElyasamRestaurant psql -U mosleh
+
+.PHONY: migratefilesup postgres postgresstop postgresstart postgresdown createdb dropdb execdb migrateup migratedown sqlc run mock backup
