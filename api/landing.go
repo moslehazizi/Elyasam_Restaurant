@@ -18,7 +18,9 @@ func (server *Server) getLanding(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, errorResponse(err_1))
 		return
 	}
-	c.JSON(http.StatusOK, categories)
+	c.JSON(http.StatusOK, gin.H{
+		"List of categories": categories,
+	})
 
 	for _, category := range categories {
 		arg := db.ListServicesParams{
@@ -32,7 +34,25 @@ func (server *Server) getLanding(c *gin.Context) {
 			c.JSON(http.StatusInternalServerError, errorResponse(err))
 			return
 		}
-		c.JSON(http.StatusOK, services_for_category)
+		c.JSON(http.StatusOK, gin.H{
+			"Every services order by categories": services_for_category,
+		})
 	}
-	c.JSON(http.StatusOK, externalAPIResponseJson)
+	c.JSON(http.StatusOK, gin.H{
+		"Random service for 60 sec for offer": externalAPIResponseJson,
+	})
+
+	arg_2 := db.ListSliderImagesParams {
+		Limit: 5,
+		Offset: 0,
+	}
+
+	slider_images, err := server.store.ListSliderImages(c, arg_2)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"Slider_image": slider_images,
+		})
 }
