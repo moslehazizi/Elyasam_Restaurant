@@ -1,12 +1,6 @@
 package api
 
 import (
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
-	"net/http"
-	"time"
-
 	"github.com/gin-gonic/gin"
 	db "github.com/moslehazizi/Elyasam_Restaurant/db/sqlc"
 )
@@ -23,18 +17,18 @@ func NewServer(store db.Store) *Server {
 	server := &Server{store: store}
 	router := gin.Default()
 
-	go func() {
-		ticker := time.NewTicker(60 * time.Second)
-		for {
-			fmt.Println("Can you see this line?!")
-			// Perform the REST API call and update externalAPIResponse
+	// go func() {
+	// 	ticker := time.NewTicker(60 * time.Second)
+	// 	for {
+	// 		fmt.Println("Can you see this line?!")
+	// 		// Perform the REST API call and update externalAPIResponse
 
-			updateGetServiceEveryMin()
+	// 		updateGetServiceEveryMin()
 
-			<-ticker.C
+	// 		<-ticker.C
 
-		}
-	}()
+	// 	}
+	// }()
 
 	router.GET("/shop", server.getLanding)
 	router.GET("/shop/detail/:id", server.getServiceById)
@@ -58,23 +52,23 @@ func errorResponse(err error) gin.H {
 	return gin.H{"error": err.Error()}
 }
 
-func updateGetServiceEveryMin() {
-	response, err := http.Get("http://localhost:8080/shop/getRandomService")
-	if err != nil {
-		errorResponse(err)
-		return
-	}
+// func updateGetServiceEveryMin() {
+// 	response, err := http.Get("http://localhost:8080/shop/getRandomService")
+// 	if err != nil {
+// 		errorResponse(err)
+// 		return
+// 	}
 
-	defer response.Body.Close()
+// 	defer response.Body.Close()
 
-	//Read the response body
-	body, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		errorResponse(err)
-		return
-	}
-	// Update the global variable with the response
-	externalAPIResponse = string(body)
-	json.Unmarshal([]byte(externalAPIResponse ), &externalAPIResponseJson)
+// 	//Read the response body
+// 	body, err := ioutil.ReadAll(response.Body)
+// 	if err != nil {
+// 		errorResponse(err)
+// 		return
+// 	}
+// 	// Update the global variable with the response
+// 	externalAPIResponse = string(body)
+// 	json.Unmarshal([]byte(externalAPIResponse ), &externalAPIResponseJson)
 
-}
+// }

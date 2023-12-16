@@ -29,6 +29,16 @@ func (q *Queries) CreateDiscountOffer(ctx context.Context, serviceID int64) (Dis
 	return i, err
 }
 
+const deleteDiscountOffer = `-- name: DeleteDiscountOffer :exec
+DELETE FROM discount_offers
+WHERE id = $1
+`
+
+func (q *Queries) DeleteDiscountOffer(ctx context.Context, id int64) error {
+	_, err := q.db.ExecContext(ctx, deleteDiscountOffer, id)
+	return err
+}
+
 const getDiscountOffer = `-- name: GetDiscountOffer :one
 SELECT id, service_id, created_at, expired_at FROM discount_offers
 WHERE id = $1 LIMIT 1

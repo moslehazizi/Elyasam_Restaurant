@@ -14,6 +14,7 @@ type Querier interface {
 	CreateDiscountOffer(ctx context.Context, serviceID int64) (DiscountOffer, error)
 	CreateService(ctx context.Context, arg CreateServiceParams) (Service, error)
 	CreateSliderImage(ctx context.Context, imagePath string) (SliderImage, error)
+	DeleteDiscountOffer(ctx context.Context, id int64) error
 	GetCategory(ctx context.Context, id int64) (Category, error)
 	GetComment(ctx context.Context, id int64) (Comment, error)
 	GetDiscountOffer(ctx context.Context, id int64) (DiscountOffer, error)

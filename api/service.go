@@ -2,12 +2,14 @@ package api
 
 import (
 	"database/sql"
+	db_1 "database/sql"
 	"math/rand"
 	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	db "github.com/moslehazizi/Elyasam_Restaurant/db/sqlc"
+	"google.golang.org/protobuf/types/known/structpb"
 )
 
 type getServiceRequest struct {
@@ -87,6 +89,8 @@ type updateServiceRequest struct {
 	Price        int64  `json:"price" binding:"required"`
 }
 
+var discountOfferStruct []db.DiscountOffer
+
 func (server *Server) putService(c *gin.Context) {
 	var req postServiceRequestId
 	var req_s updateServiceRequest
@@ -121,25 +125,85 @@ func (server *Server) putService(c *gin.Context) {
 	c.JSON(http.StatusOK, service)
 }
 
-func (server *Server) getRandomService(c *gin.Context) {
+
+
+
+func (server *Server) getRandomServices(c *gin.Context) {
+
+	var IdChecker []string
+
+	arg := db.ListDiscountOffersParams{
+		Limit: 20,
+		Offset: 0,
+	}
+	discount_offers, err := server.store.ListDiscountOffers(c, arg)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	discountOfferStruct = append(discountOfferStruct, discount_offers...)
+
+	// check ids of every discounts to check be nil or not
+	for _, discount_offer := range discountOfferStruct{
+		IdChecker = append(IdChecker, string(discount_offer.ID))
+	}
+
+
+	for _, discount_offer := range discountOfferStruct {
+
+		if IdChecker == []struct{} {
+			// delete all
+			// make new
+		} else if IdChecker != []struct{} {
+			if discount_offer.ExpiredAt >= time.Now() {
+				server.deleteDiscountOffers(c)
+				server.makeListOfdiscounts(c)
+			} else {
+				return discountOfferStruct
+			}
+		}
+	}
+
+}
+
+
+func (server *Server) makeListOfdiscounts(c *gin.Context) {
+
 	arg := db.ListServicesByIdParams{
 		Limit:  123,
 		Offset: 0,
 	}
-	services_for_min, err := server.store.ListServicesById(c, arg)
+	services_list, err := server.store.ListServicesById(c, arg)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
 
-	rand.Seed(time.Now().UnixNano())
+	for i := 0; i < 20; i++ {
+		rand.Seed(time.Now().UnixNano())
+		randomIndex := rand.Intn(len(services_list))
+		randomItem := services_list[randomIndex]
+		discount_create_offer, err := server.store.CreateDiscountOffer(c, randomItem.ID)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, errorResponse(err))
+			return
+		}
+		discountOfferStruct = append(discountOfferStruct, discount_create_offer)
+	}
+}	
 
-	// Get a random index
-	randomIndex := rand.Intn(len(services_for_min))
-
-	// Retrieve the item using the random index
-	randomItem := services_for_min[randomIndex]
-
-	c.JSON(http.StatusOK, randomItem)
+func (server *Server) deleteDiscountOffers (c *gin.Context) {
+	for _, discountForDelte := range discountOfferStruct {
+		err := server.store.DeleteDiscountOffer(c, discountForDelte.ID)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				c.JSON(http.StatusNotFound, errorResponse(err))
+				return
+			}
+			c.JSON(http.StatusInternalServerError, errorResponse(err))
+			return
+		}
+	}
 }

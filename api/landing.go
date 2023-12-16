@@ -38,9 +38,6 @@ func (server *Server) getLanding(c *gin.Context) {
 			"Every services order by categories": services_for_category,
 		})
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"Random service for 60 sec for offer": externalAPIResponseJson,
-	})
 
 	arg_2 := db.ListSliderImagesParams {
 		Limit: 5,
@@ -55,4 +52,6 @@ func (server *Server) getLanding(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"Slider_image": slider_images,
 		})
+
+	server.getRandomServices(c)
 }
