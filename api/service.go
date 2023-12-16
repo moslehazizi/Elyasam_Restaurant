@@ -2,7 +2,9 @@ package api
 
 import (
 	"database/sql"
+	"math/rand"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	db "github.com/moslehazizi/Elyasam_Restaurant/db/sqlc"
@@ -117,4 +119,27 @@ func (server *Server) putService(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, service)
+}
+
+func (server *Server) getRandomService(c *gin.Context) {
+	arg := db.ListServicesByIdParams{
+		Limit:  123,
+		Offset: 0,
+	}
+	services_for_min, err := server.store.ListServicesById(c, arg)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	rand.Seed(time.Now().UnixNano())
+
+	// Get a random index
+	randomIndex := rand.Intn(len(services_for_min))
+
+	// Retrieve the item using the random index
+	randomItem := services_for_min[randomIndex]
+
+	c.JSON(http.StatusOK, randomItem)
 }

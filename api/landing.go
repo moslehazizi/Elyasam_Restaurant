@@ -34,4 +34,5 @@ func (server *Server) getLanding(c *gin.Context) {
 		}
 		c.JSON(http.StatusOK, services_for_category)
 	}
+	c.JSON(http.StatusOK, externalAPIResponseJson)
 }

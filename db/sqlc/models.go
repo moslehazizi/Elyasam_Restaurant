@@ -21,6 +21,13 @@ type Comment struct {
 	CreatedAt      time.Time `json:"created_at"`
 }
 
+type DiscountOffer struct {
+	ID        int64     `json:"id"`
+	ServiceID int64     `json:"service_id"`
+	CreatedAt time.Time `json:"created_at"`
+	ExpiredAt time.Time `json:"expired_at"`
+}
+
 type Service struct {
 	ID              int64  `json:"id"`
 	ServiceImage    string `json:"service_image"`
@@ -29,4 +36,9 @@ type Service struct {
 	Star            int32  `json:"star"`
 	Recipe          string `json:"recipe"`
 	Price           int64  `json:"price"`
+}
+
+type SliderImage struct {
+	ID        int64  `json:"id"`
+	ImagePath string `json:"image_path"`
 }
