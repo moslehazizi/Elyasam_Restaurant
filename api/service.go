@@ -12,7 +12,7 @@ type getServiceRequest struct {
 	ID int64 `uri:"id" binding:"required,min=1"`
 }
 
-func (server *Server) getSeerviceById(c *gin.Context) {
+func (server *Server) getServiceById(c *gin.Context) {
 
 	var req getServiceRequest
 	if err := c.ShouldBindUri(&req); err != nil {
