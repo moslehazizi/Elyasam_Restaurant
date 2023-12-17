@@ -17,19 +17,6 @@ func NewServer(store db.Store) *Server {
 	server := &Server{store: store}
 	router := gin.Default()
 
-	// go func() {
-	// 	ticker := time.NewTicker(60 * time.Second)
-	// 	for {
-	// 		fmt.Println("Can you see this line?!")
-	// 		// Perform the REST API call and update externalAPIResponse
-
-	// 		updateGetServiceEveryMin()
-
-	// 		<-ticker.C
-
-	// 	}
-	// }()
-
 	router.GET("/shop", server.getLanding)
 	router.GET("/shop/detail/:id", server.getServiceById)
 
@@ -37,7 +24,7 @@ func NewServer(store db.Store) *Server {
 	router.POST("post/service/:id", server.postService)
 	router.POST("post/sliderImage", server.postSliderImage)
 	router.POST("post/discountOffer", server.PostDiscountOffer)
-	
+
 	router.PUT("put/service/:id", server.putService)
 
 	server.router = router
@@ -52,24 +39,3 @@ func (server *Server) Start(address string) error {
 func errorResponse(err error) gin.H {
 	return gin.H{"error": err.Error()}
 }
-
-// func updateGetServiceEveryMin() {
-// 	response, err := http.Get("http://localhost:8080/shop/getRandomService")
-// 	if err != nil {
-// 		errorResponse(err)
-// 		return
-// 	}
-
-// 	defer response.Body.Close()
-
-// 	//Read the response body
-// 	body, err := ioutil.ReadAll(response.Body)
-// 	if err != nil {
-// 		errorResponse(err)
-// 		return
-// 	}
-// 	// Update the global variable with the response
-// 	externalAPIResponse = string(body)
-// 	json.Unmarshal([]byte(externalAPIResponse ), &externalAPIResponseJson)
-
-// }
