@@ -2,7 +2,7 @@ migratefilesup: # nc-0
 	migrate create -ext sql -dir db/migration -seq init_schema
 
 postgres: # nc_1
-	docker run --name postgresElyasamRestaurant -p 5432:5432 -e POSTGRES_USER=mosleh -e POSTGRES_PASSWORD=1234 -d postgres:latest
+	docker run --name postgresElyasamRestaurant -p 5432:5432 -e POSTGRES_USER=mosleh -e POSTGRES_PASSWORD=1234 -d postgres:16.1-alpine3.19
 
 postgresstop:
 	docker stop postgresElyasamRestaurant
