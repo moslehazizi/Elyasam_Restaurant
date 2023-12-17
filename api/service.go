@@ -2,19 +2,19 @@ package api
 
 import (
 	"database/sql"
-	db_1 "database/sql"
 	"math/rand"
 	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	db "github.com/moslehazizi/Elyasam_Restaurant/db/sqlc"
-	"google.golang.org/protobuf/types/known/structpb"
 )
 
 type getServiceRequest struct {
 	ID int64 `uri:"id" binding:"required,min=1"`
 }
+
+var discountOfferStruct []db.DiscountOffer
 
 func (server *Server) getServiceById(c *gin.Context) {
 
@@ -89,8 +89,6 @@ type updateServiceRequest struct {
 	Price        int64  `json:"price" binding:"required"`
 }
 
-var discountOfferStruct []db.DiscountOffer
-
 func (server *Server) putService(c *gin.Context) {
 	var req postServiceRequestId
 	var req_s updateServiceRequest
@@ -125,15 +123,14 @@ func (server *Server) putService(c *gin.Context) {
 	c.JSON(http.StatusOK, service)
 }
 
-
-
-
 func (server *Server) getRandomServices(c *gin.Context) {
 
-	var IdChecker []string
+	// clean holder
+	discountOfferStruct = nil
 
+	// Get list of items in discount_offers
 	arg := db.ListDiscountOffersParams{
-		Limit: 20,
+		Limit:  20,
 		Offset: 0,
 	}
 	discount_offers, err := server.store.ListDiscountOffers(c, arg)
@@ -144,30 +141,17 @@ func (server *Server) getRandomServices(c *gin.Context) {
 
 	discountOfferStruct = append(discountOfferStruct, discount_offers...)
 
-	// check ids of every discounts to check be nil or not
-	for _, discount_offer := range discountOfferStruct{
-		IdChecker = append(IdChecker, string(discount_offer.ID))
+	// Check if items in discountOfferStruct have been expired or not. it creates new list if data have been expired.
+	if time.Now().Compare(discountOfferStruct[1].ExpiredAt) == 1 || time.Now().Compare(discountOfferStruct[1].ExpiredAt) == 0 {
+		server.deleteDiscountOffers(c)
+		server.makeListOfdiscounts(c)
+		c.JSON(http.StatusOK, discountOfferStruct)
+	} else if time.Now().Compare(discountOfferStruct[1].ExpiredAt) == -1 {
+		c.JSON(http.StatusOK, discountOfferStruct)
 	}
-
-
-	for _, discount_offer := range discountOfferStruct {
-
-		if IdChecker == []struct{} {
-			// delete all
-			// make new
-		} else if IdChecker != []struct{} {
-			if discount_offer.ExpiredAt >= time.Now() {
-				server.deleteDiscountOffers(c)
-				server.makeListOfdiscounts(c)
-			} else {
-				return discountOfferStruct
-			}
-		}
-	}
-
 }
 
-
+// create new items for discountOfferStruct.
 func (server *Server) makeListOfdiscounts(c *gin.Context) {
 
 	arg := db.ListServicesByIdParams{
@@ -192,9 +176,10 @@ func (server *Server) makeListOfdiscounts(c *gin.Context) {
 		}
 		discountOfferStruct = append(discountOfferStruct, discount_create_offer)
 	}
-}	
+}
 
-func (server *Server) deleteDiscountOffers (c *gin.Context) {
+// Delete items on discountOfferStruct that expired
+func (server *Server) deleteDiscountOffers(c *gin.Context) {
 	for _, discountForDelte := range discountOfferStruct {
 		err := server.store.DeleteDiscountOffer(c, discountForDelte.ID)
 		if err != nil {
