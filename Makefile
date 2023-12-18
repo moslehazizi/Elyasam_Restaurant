@@ -41,9 +41,9 @@ mock:
 	mockgen -package mockdb -destination db/mock/store.go github.com/moslehazizi/Elyasam_Restaurant/db/sqlc Store
 
 backup:
-	docker exec -t postgresElyasamRestaurant pg_dumpall -c -U mosleh > dump_`date +%d-%m-%Y"_"%H_%M_%S`.sql
+	docker exec -t elyasam_restaurant-postgres-1 pg_dumpall -c -U mosleh > dump_`date +%d-%m-%Y"_"%H_%M_%S`.sql
 
 restore: # every time to restore a specific backup file must replace with your_dump.sql
-	cat dump_16-12-2023_19_36_14.sql | docker exec -i elyasam_restaurant-postgres-1 psql -U mosleh -d Elyasam_Restaurant
+	cat dump_18-12-2023_09_05_39.sql | docker exec -i elyasam_restaurant-postgres-1 psql -U mosleh -d Elyasam_Restaurant
 
 .PHONY: migratefilesup postgres postgresstop postgresstart postgresdown createdb dropdb execdb migrateup migratedown sqlc run mock backup restore

@@ -54,8 +54,8 @@ ALTER ROLE mosleh WITH SUPERUSER INHERIT CREATEROLE CREATEDB LOGIN REPLICATION B
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 15.4 (Debian 15.4-1.pgdg120+1)
--- Dumped by pg_dump version 15.4 (Debian 15.4-1.pgdg120+1)
+-- Dumped from database version 16.1
+-- Dumped by pg_dump version 16.1
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -139,8 +139,8 @@ GRANT CONNECT ON DATABASE template1 TO PUBLIC;
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 15.4 (Debian 15.4-1.pgdg120+1)
--- Dumped by pg_dump version 15.4 (Debian 15.4-1.pgdg120+1)
+-- Dumped from database version 16.1
+-- Dumped by pg_dump version 16.1
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -204,7 +204,7 @@ CREATE SEQUENCE public.categories_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.categories_id_seq OWNER TO mosleh;
+ALTER SEQUENCE public.categories_id_seq OWNER TO mosleh;
 
 --
 -- Name: categories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: mosleh
@@ -239,7 +239,7 @@ CREATE SEQUENCE public.comments_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.comments_id_seq OWNER TO mosleh;
+ALTER SEQUENCE public.comments_id_seq OWNER TO mosleh;
 
 --
 -- Name: comments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: mosleh
@@ -274,7 +274,7 @@ CREATE SEQUENCE public.discount_offers_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.discount_offers_id_seq OWNER TO mosleh;
+ALTER SEQUENCE public.discount_offers_id_seq OWNER TO mosleh;
 
 --
 -- Name: discount_offers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: mosleh
@@ -324,7 +324,7 @@ CREATE SEQUENCE public.services_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.services_id_seq OWNER TO mosleh;
+ALTER SEQUENCE public.services_id_seq OWNER TO mosleh;
 
 --
 -- Name: services_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: mosleh
@@ -357,7 +357,7 @@ CREATE SEQUENCE public.slider_images_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.slider_images_id_seq OWNER TO mosleh;
+ALTER SEQUENCE public.slider_images_id_seq OWNER TO mosleh;
 
 --
 -- Name: slider_images_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: mosleh
@@ -441,6 +441,26 @@ COPY public.comments (id, comment_content, service_id, created_at) FROM stdin;
 --
 
 COPY public.discount_offers (id, service_id, created_at, expired_at) FROM stdin;
+1	2	2023-12-18 14:03:59.94276+00	2023-12-18 22:03:59.94276+00
+2	8	2023-12-18 14:04:04.03179+00	2023-12-18 22:04:04.03179+00
+3	13	2023-12-18 14:04:06.962902+00	2023-12-18 22:04:06.962902+00
+4	25	2023-12-18 14:04:10.279962+00	2023-12-18 22:04:10.279962+00
+5	26	2023-12-18 14:04:12.86213+00	2023-12-18 22:04:12.86213+00
+6	27	2023-12-18 14:04:15.693454+00	2023-12-18 22:04:15.693454+00
+7	32	2023-12-18 14:04:18.862449+00	2023-12-18 22:04:18.862449+00
+8	41	2023-12-18 14:04:22.382562+00	2023-12-18 22:04:22.382562+00
+9	40	2023-12-18 14:04:25.532618+00	2023-12-18 22:04:25.532618+00
+10	47	2023-12-18 14:04:30.451936+00	2023-12-18 22:04:30.451936+00
+11	50	2023-12-18 14:04:37.084379+00	2023-12-18 22:04:37.084379+00
+12	53	2023-12-18 14:04:40.353665+00	2023-12-18 22:04:40.353665+00
+13	54	2023-12-18 14:04:43.699701+00	2023-12-18 22:04:43.699701+00
+14	59	2023-12-18 14:04:48.368634+00	2023-12-18 22:04:48.368634+00
+15	85	2023-12-18 14:04:52.809581+00	2023-12-18 22:04:52.809581+00
+16	63	2023-12-18 14:04:57.093862+00	2023-12-18 22:04:57.093862+00
+17	89	2023-12-18 14:05:01.596314+00	2023-12-18 22:05:01.596314+00
+18	100	2023-12-18 14:05:05.400867+00	2023-12-18 22:05:05.400867+00
+19	98	2023-12-18 14:05:09.457678+00	2023-12-18 22:05:09.457678+00
+20	95	2023-12-18 14:05:13.924407+00	2023-12-18 22:05:13.924407+00
 \.
 
 
@@ -615,7 +635,7 @@ SELECT pg_catalog.setval('public.comments_id_seq', 1, false);
 -- Name: discount_offers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: mosleh
 --
 
-SELECT pg_catalog.setval('public.discount_offers_id_seq', 1, false);
+SELECT pg_catalog.setval('public.discount_offers_id_seq', 20, true);
 
 
 --
@@ -732,6 +752,14 @@ ALTER TABLE ONLY public.discount_offers
 
 
 --
+-- Name: services services_service_category_fkey; Type: FK CONSTRAINT; Schema: public; Owner: mosleh
+--
+
+ALTER TABLE ONLY public.services
+    ADD CONSTRAINT services_service_category_fkey FOREIGN KEY (service_category) REFERENCES public.categories(id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
@@ -743,8 +771,8 @@ ALTER TABLE ONLY public.discount_offers
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 15.4 (Debian 15.4-1.pgdg120+1)
--- Dumped by pg_dump version 15.4 (Debian 15.4-1.pgdg120+1)
+-- Dumped from database version 16.1
+-- Dumped by pg_dump version 16.1
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -791,8 +819,8 @@ SET row_security = off;
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 15.4 (Debian 15.4-1.pgdg120+1)
--- Dumped by pg_dump version 15.4 (Debian 15.4-1.pgdg120+1)
+-- Dumped from database version 16.1
+-- Dumped by pg_dump version 16.1
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
