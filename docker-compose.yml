@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:16.1-alpine3.19
+    environment:
+      - POSTGRES_USER=mosleh
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=Elyasam_Restaurant
+    healthcheck:
+      test: "exit 0"
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_SOURCE=postgres://mosleh:1234@postgres:5432/Elyasam_Restaurant?sslmode=disable
+    depends_on:
+      postgres:
+        condition: service_healthy
