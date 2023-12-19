@@ -15,7 +15,7 @@ COPY app.env .
 COPY start.sh .
 COPY db/migration ./migration
 COPY Makefile .
-COPY dump_16-12-2023_19_36_14.sql .
+COPY dump_18-12-2023_09_05_39.sql .
 
 EXPOSE 8080
 CMD [ "/app/main" ]
