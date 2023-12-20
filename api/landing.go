@@ -18,9 +18,7 @@ func (server *Server) getLanding(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, errorResponse(err_1))
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"List of categories": categories,
-	})
+	c.JSON(http.StatusOK, categories)
 
 	for _, category := range categories {
 		arg := db.ListServicesParams{
@@ -34,9 +32,7 @@ func (server *Server) getLanding(c *gin.Context) {
 			c.JSON(http.StatusInternalServerError, errorResponse(err))
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{
-			"Every services order by categories": services_for_category,
-		})
+		c.JSON(http.StatusOK, services_for_category)
 	}
 
 	arg_2 := db.ListSliderImagesParams {
@@ -49,9 +45,7 @@ func (server *Server) getLanding(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"Slider_image": slider_images,
-		})
+	c.JSON(http.StatusOK, slider_images)
 
 	server.getRandomServices(c)
 }
