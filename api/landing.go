@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -9,7 +8,11 @@ import (
 )
 
 func (server *Server) getLanding(c *gin.Context) {
-	
+
+	var responseCategories []db.Category
+	var responseServices []db.Service
+	var responseSlider []db.SliderImage
+
 	arg := db.ListCategoriesParams{
 		Limit:  19,
 		Offset: 0,
@@ -19,8 +22,8 @@ func (server *Server) getLanding(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, errorResponse(err_1))
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"categories": categories})
+
+	responseCategories = append(responseCategories, categories...)
 
 	for _, category := range categories {
 		arg := db.ListServicesParams{
@@ -34,12 +37,13 @@ func (server *Server) getLanding(c *gin.Context) {
 			c.JSON(http.StatusInternalServerError, errorResponse(err))
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{
-			fmt.Sprintf("Services for category number %d", arg.ServiceCategory): services_for_category})
+		responseServices = append(responseServices, services_for_category...)
+		// c.JSON(http.StatusOK, gin.H{
+		// 	fmt.Sprintf("Services for category number %d", arg.ServiceCategory): services_for_category})
 	}
 
-	arg_2 := db.ListSliderImagesParams {
-		Limit: 5,
+	arg_2 := db.ListSliderImagesParams{
+		Limit:  5,
 		Offset: 0,
 	}
 
@@ -48,9 +52,20 @@ func (server *Server) getLanding(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"Slider images": slider_images})
-	
 
-	server.getRandomServices(c)
+	responseSlider = append(responseSlider, slider_images...)
+
+	// c.JSON(http.StatusOK, gin.H{
+	// 	"categories": categories})
+
+	// c.JSON(http.StatusOK, gin.H{
+	// 	"Slider images": slider_images})
+	// server.getRandomServices(c)
+
+	c.JSON(http.StatusOK, gin.H{
+		"categories": responseCategories,
+		"servicesForCategories": responseServices,
+		"sliderImages": responseSlider,
+		"discountOffers": server.getRandomServices(c),
+	})
 }

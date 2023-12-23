@@ -123,7 +123,7 @@ func (server *Server) putService(c *gin.Context) {
 	c.JSON(http.StatusOK, service)
 }
 
-func (server *Server) getRandomServices(c *gin.Context) {
+func (server *Server) getRandomServices(c *gin.Context) []db.DiscountOffer {
 
 	// clean holder
 	discountOfferStruct = nil
@@ -136,7 +136,6 @@ func (server *Server) getRandomServices(c *gin.Context) {
 	discount_offers, err := server.store.ListDiscountOffers(c, arg)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, errorResponse(err))
-		return
 	}
 
 	discountOfferStruct = append(discountOfferStruct, discount_offers...)
@@ -145,14 +144,15 @@ func (server *Server) getRandomServices(c *gin.Context) {
 	if time.Now().Compare(discountOfferStruct[1].ExpiredAt) == 1 || time.Now().Compare(discountOfferStruct[1].ExpiredAt) == 0 {
 		server.deleteDiscountOffers(c)
 		server.makeListOfdiscounts(c)
-		c.JSON(http.StatusOK, gin.H{
-			"Discount offers": discountOfferStruct,
-		})
+		// c.JSON(http.StatusOK, gin.H{
+		// 	"Discount offers": discountOfferStruct,
+		// })
 	} else if time.Now().Compare(discountOfferStruct[1].ExpiredAt) == -1 {
-		c.JSON(http.StatusOK, gin.H{
-			"Discount offers": discountOfferStruct,
-		})
+		// c.JSON(http.StatusOK, gin.H{
+		// 	"Discount offers": discountOfferStruct,
+		// })
 	}
+	return discountOfferStruct
 }
 
 // create new items for discountOfferStruct.
