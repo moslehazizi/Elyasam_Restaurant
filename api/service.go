@@ -145,9 +145,13 @@ func (server *Server) getRandomServices(c *gin.Context) {
 	if time.Now().Compare(discountOfferStruct[1].ExpiredAt) == 1 || time.Now().Compare(discountOfferStruct[1].ExpiredAt) == 0 {
 		server.deleteDiscountOffers(c)
 		server.makeListOfdiscounts(c)
-		c.JSON(http.StatusOK, discountOfferStruct)
+		c.JSON(http.StatusOK, gin.H{
+			"Discount offers": discountOfferStruct,
+		})
 	} else if time.Now().Compare(discountOfferStruct[1].ExpiredAt) == -1 {
-		c.JSON(http.StatusOK, discountOfferStruct)
+		c.JSON(http.StatusOK, gin.H{
+			"Discount offers": discountOfferStruct,
+		})
 	}
 }
 

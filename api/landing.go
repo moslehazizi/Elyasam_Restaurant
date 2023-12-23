@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -18,7 +19,8 @@ func (server *Server) getLanding(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, errorResponse(err_1))
 		return
 	}
-	c.JSON(http.StatusOK, categories)
+	c.JSON(http.StatusOK, gin.H{
+		"categories": categories})
 
 	for _, category := range categories {
 		arg := db.ListServicesParams{
@@ -32,7 +34,8 @@ func (server *Server) getLanding(c *gin.Context) {
 			c.JSON(http.StatusInternalServerError, errorResponse(err))
 			return
 		}
-		c.JSON(http.StatusOK, services_for_category)
+		c.JSON(http.StatusOK, gin.H{
+			fmt.Sprintf("arg.ServiceCategory %d", arg.ServiceCategory): services_for_category})
 	}
 
 	arg_2 := db.ListSliderImagesParams {
@@ -45,7 +48,8 @@ func (server *Server) getLanding(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
-	c.JSON(http.StatusOK, slider_images)
+	c.JSON(http.StatusOK, gin.H{
+		"Slider images": slider_images})
 
 	server.getRandomServices(c)
 }
