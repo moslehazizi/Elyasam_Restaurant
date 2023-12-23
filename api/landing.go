@@ -35,7 +35,7 @@ func (server *Server) getLanding(c *gin.Context) {
 			return
 		}
 		c.JSON(http.StatusOK, gin.H{
-			fmt.Sprintf("arg.ServiceCategory %d", arg.ServiceCategory): services_for_category})
+			fmt.Sprintf("Services for category number %d", arg.ServiceCategory): services_for_category})
 	}
 
 	arg_2 := db.ListSliderImagesParams {

@@ -1,6 +1,8 @@
 package api
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	db "github.com/moslehazizi/Elyasam_Restaurant/db/sqlc"
 )
@@ -16,7 +18,9 @@ var externalAPIResponseJson map[string]interface{}
 func NewServer(store db.Store) *Server {
 	server := &Server{store: store}
 	router := gin.Default()
-
+	
+	router.Use(corsMiddleware())
+	
 	router.GET("/shop", server.getLanding)
 	router.GET("/shop/detail/:id", server.getServiceById)
 
@@ -38,4 +42,20 @@ func (server *Server) Start(address string) error {
 
 func errorResponse(err error) gin.H {
 	return gin.H{"error": err.Error()}
+}
+
+// corsMiddleware is a middleware function to enable CORS
+func corsMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(http.StatusNoContent)
+			return
+		}
+
+		c.Next()
+	}
 }
