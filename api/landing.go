@@ -9,7 +9,7 @@ import (
 )
 
 func (server *Server) getLanding(c *gin.Context) {
-
+	
 	arg := db.ListCategoriesParams{
 		Limit:  19,
 		Offset: 0,
@@ -50,6 +50,7 @@ func (server *Server) getLanding(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"Slider images": slider_images})
+	
 
 	server.getRandomServices(c)
 }
