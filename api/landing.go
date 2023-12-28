@@ -38,8 +38,6 @@ func (server *Server) getLanding(c *gin.Context) {
 			return
 		}
 		responseServices = append(responseServices, services_for_category...)
-		// c.JSON(http.StatusOK, gin.H{
-		// 	fmt.Sprintf("Services for category number %d", arg.ServiceCategory): services_for_category})
 	}
 
 	arg_2 := db.ListSliderImagesParams{
@@ -54,13 +52,6 @@ func (server *Server) getLanding(c *gin.Context) {
 	}
 
 	responseSlider = append(responseSlider, slider_images...)
-
-	// c.JSON(http.StatusOK, gin.H{
-	// 	"categories": categories})
-
-	// c.JSON(http.StatusOK, gin.H{
-	// 	"Slider images": slider_images})
-	// server.getRandomServices(c)
 
 	c.JSON(http.StatusOK, gin.H{
 		"categories": responseCategories,
