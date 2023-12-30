@@ -3,3 +3,4 @@ DROP TABLE IF EXISTS services;
 DROP TABLE IF EXISTS comments;
 DROP TABLE IF EXISTS discount_offers;
 DROP TABLE IF EXISTS slider_images;
+DROP TABLE IF EXISTS users;
