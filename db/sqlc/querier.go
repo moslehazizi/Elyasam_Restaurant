@@ -21,7 +21,7 @@ type Querier interface {
 	GetDiscountOffer(ctx context.Context, id int64) (DiscountOffer, error)
 	GetService(ctx context.Context, id int64) (Service, error)
 	GetSliderImage(ctx context.Context, id int64) (SliderImage, error)
-	GetUser(ctx context.Context, id int64) (User, error)
+	GetUser(ctx context.Context, arg GetUserParams) (User, error)
 	ListCategories(ctx context.Context, arg ListCategoriesParams) ([]Category, error)
 	ListComments(ctx context.Context, arg ListCommentsParams) ([]Comment, error)
 	ListDiscountOffers(ctx context.Context, arg ListDiscountOffersParams) ([]DiscountOffer, error)

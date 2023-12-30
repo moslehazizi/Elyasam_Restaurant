@@ -11,4 +11,6 @@ INSERT INTO users(
 
 -- name: GetUser :one
 SELECT * FROM users
-WHERE id = $1 LIMIT 1;
+WHERE phone_number = $1 AND
+      hashed_password = $2
+LIMIT 1;
