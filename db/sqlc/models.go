@@ -42,3 +42,13 @@ type SliderImage struct {
 	ID        int64  `json:"id"`
 	ImagePath string `json:"image_path"`
 }
+
+type User struct {
+	ID             int64     `json:"id"`
+	PhoneNumber    string    `json:"phone_number"`
+	HashedPassword string    `json:"hashed_password"`
+	FirstName      string    `json:"first_name"`
+	LastName       string    `json:"last_name"`
+	Email          string    `json:"email"`
+	CreatedAt      time.Time `json:"created_at"`
+}
