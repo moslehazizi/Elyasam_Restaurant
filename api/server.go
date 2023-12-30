@@ -18,16 +18,18 @@ var externalAPIResponseJson map[string]interface{}
 func NewServer(store db.Store) *Server {
 	server := &Server{store: store}
 	router := gin.Default()
-	
+
 	router.Use(corsMiddleware())
-	
+
 	router.GET("/shop", server.getLanding)
 	router.GET("/shop/detail/:id", server.getServiceById)
+	//router.GET("/user", server.getUser)
 
 	router.POST("post/category", server.postCategory)
 	router.POST("post/service/:id", server.postService)
 	router.POST("post/sliderImage", server.postSliderImage)
 	router.POST("post/discountOffer", server.PostDiscountOffer)
+	router.POST("post/user", server.createUser)
 
 	router.PUT("put/service/:id", server.putService)
 

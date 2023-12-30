@@ -1,11 +1,21 @@
-CREATE TABLE "categories" (
+CREATE TABLE "users" (
   "id" bigserial PRIMARY KEY,
+  "phone_number" varchar UNIQUE NOT NULL,
+  "hashed_password" varchar NOT NULL,
+  "first_name" varchar NOT NULL,
+  "last_name" varchar NOT NULL,
+  "email" varchar NOT NULL,
+  "created_at" timestamptz NOT NULL DEFAULT (now())
+);
+
+CREATE TABLE "categories" (
+  "id" BIGSERIAL PRIMARY KEY,
   "category_title" varchar NOT NULL,
   "category_icon" varchar NOT NULL
 );
 
 CREATE TABLE "services" (
-  "id" bigserial PRIMARY KEY,
+  "id" BIGSERIAL PRIMARY KEY,
   "service_image" varchar NOT NULL,
   "service_title" varchar NOT NULL,
   "service_category" bigint NOT NULL,
@@ -15,21 +25,21 @@ CREATE TABLE "services" (
 );
 
 CREATE TABLE "comments" (
-  "id" bigserial PRIMARY KEY,
+  "id" BIGSERIAL PRIMARY KEY,
   "comment_content" text NOT NULL,
   "service_id" bigint NOT NULL,
   "created_at" timestamp NOT NULL DEFAULT (now())
 );
 
 CREATE TABLE "discount_offers" (
-  "id" bigserial PRIMARY KEY,
+  "id" BIGSERIAL PRIMARY KEY,
   "service_id" bigint NOT NULL,
   "created_at" timestamptz NOT NULL DEFAULT (now()),
-  "expired_at" timestamptz NOT NULL DEFAULT (now() + INTERVAL '8 hours')
+  "expired_at" timestamptz NOT NULL DEFAULT (now()+INTERVAL'8 hours')
 );
 
 CREATE TABLE "slider_images" (
-  "id" bigserial PRIMARY KEY,
+  "id" BIGSERIAL PRIMARY KEY,
   "image_path" varchar NOT NULL
 );
 
