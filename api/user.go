@@ -19,11 +19,11 @@ type createUserRequest struct {
 }
 
 type createUserResponse struct {
-	PhoneNumber    string    `json:"phone_number"`
-	FirstName      string    `json:"first_name"`
-	LastName       string    `json:"last_name"`
-	Email          string    `json:"email"`
-	CreatedAt      time.Time `json:"created_at"`
+	PhoneNumber string    `json:"phone_number"`
+	FirstName   string    `json:"first_name"`
+	LastName    string    `json:"last_name"`
+	Email       string    `json:"email"`
+	CreatedAt   time.Time `json:"created_at"`
 }
 
 func (server *Server) createUser(c *gin.Context) {
@@ -62,11 +62,11 @@ func (server *Server) createUser(c *gin.Context) {
 		return
 	}
 
-	res := createUserResponse {
+	res := createUserResponse{
 		PhoneNumber: user.PhoneNumber,
-		FirstName: user.FirstName,
-		LastName: user.LastName,
-		Email: user.Email,
+		FirstName:   user.FirstName,
+		LastName:    user.LastName,
+		Email:       user.Email,
 	}
 
 	c.JSON(http.StatusOK, gin.H{
@@ -74,8 +74,8 @@ func (server *Server) createUser(c *gin.Context) {
 }
 
 // type getUserRequest struct {
-// 	phoneNumber string `json:"phone_number" binding:"required"`
-// 	password string `json:"hashed_password" binding:"required"`
+// 	PhoneNumber string `json:"phone_number" binding:"required"`
+// 	Password    string `json:"hashed_password" binding:"required"`
 // }
 
 // func (server *Server) getUser(c *gin.Context) {
@@ -85,19 +85,25 @@ func (server *Server) createUser(c *gin.Context) {
 // 		return
 // 	}
 
-// 	hashedPassword, err := util.HashPassword(req.password)
+// 	hashedPassword, err := util.HashPassword(req.Password)
 
 // 	if err != nil {
 // 		c.JSON(http.StatusNotFound, errorResponse(err))
 // 		return
 // 	}
 
-// 	arg := db.GetUserParams {
-// 		PhoneNumber: req.phoneNumber,
-// 		HashedPassword: req.password,
+// 	arg := db.GetUserParams{
+// 		PhoneNumber:    req.PhoneNumber,
+// 		HashedPassword: hashedPassword,
 // 	}
 
 // 	user, err := server.store.GetUser(c, arg)
+
+// 	if hashedPassword != user.HashedPassword {
+// 		c.JSON(http.StatusNotFound, errorResponse(err))
+// 		return
+// 	}
+
 // 	if err != nil {
 // 		if err == sql.ErrNoRows {
 // 			c.JSON(http.StatusNotFound, errorResponse(err))
