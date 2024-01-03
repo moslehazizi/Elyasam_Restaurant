@@ -40,10 +40,9 @@ func (maker *PasetoMaker) VerifyToken(token string) (*Payload, error) {
 	if err != nil {
 		return nil, paseto.ErrInvalidTokenAuth
 	}
-	// err = payload.
+	// err = payload.Valid()
 	// if err != nil {
-	// 	return nil, paseto.ErrInvalidTokenAuth
+	// 	return nil
 	// }
-
 	return payload, nil
 }
