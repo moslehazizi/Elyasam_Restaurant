@@ -5,10 +5,12 @@ import (
 
 	"github.com/gin-gonic/gin"
 	db "github.com/moslehazizi/Elyasam_Restaurant/db/sqlc"
+	"github.com/moslehazizi/Elyasam_Restaurant/token"
 )
 
 type Server struct {
 	store  db.Store
+	tokenMaker token.Maker
 	router *gin.Engine
 }
 
