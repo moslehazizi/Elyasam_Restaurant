@@ -1,6 +1,7 @@
 package api
 
 import (
+	"database/sql"
 	"net/http"
 	"time"
 
@@ -24,6 +25,16 @@ type createUserResponse struct {
 	LastName    string    `json:"last_name"`
 	Email       string    `json:"email"`
 	CreatedAt   time.Time `json:"created_at"`
+}
+
+func newUserResponse(user db.User) userResponse {
+	return userResponse{
+		Phonenumber: user.PhoneNumber,
+		FirstName:   user.FirstName,
+		LastName:    user.LastName,
+		Email:       user.Email,
+		CreatedAt:   user.CreatedAt,
+	}
 }
 
 func (server *Server) createUser(c *gin.Context) {
@@ -62,55 +73,69 @@ func (server *Server) createUser(c *gin.Context) {
 		return
 	}
 
-	res := createUserResponse{
-		PhoneNumber: user.PhoneNumber,
-		FirstName:   user.FirstName,
-		LastName:    user.LastName,
-		Email:       user.Email,
-	}
+	res := newUserResponse(user)
 
 	c.JSON(http.StatusOK, gin.H{
 		"response": res})
 }
 
-// type getUserRequest struct {
-// 	PhoneNumber string `json:"phone_number" binding:"required"`
-// 	Password    string `json:"hashed_password" binding:"required"`
-// }
+type loginUserRequest struct {
+	Phonenumber string `json:"phone_number" binding:"required"`
+	Password    string `json:"password" binding:"required,min=6"`
+}
 
-// func (server *Server) getUser(c *gin.Context) {
-// 	var req getUserRequest
-// 	if err := c.ShouldBindJSON(&req); err != nil {
-// 		c.JSON(http.StatusBadRequest, errorResponse(err))
-// 		return
-// 	}
+type userResponse struct {
+	ID          int64     `json:"id"`
+	Phonenumber string    `json:"phone_number"`
+	FirstName   string    `json:"first_name"`
+	LastName    string    `json:"last_name"`
+	Email       string    `json:"email"`
+	CreatedAt   time.Time `json:"created_at"`
+}
 
-// 	hashedPassword, err := util.HashPassword(req.Password)
+type loginUserResponse struct {
+	AccessToken string       `json:"access_token"`
+	User        userResponse `json:"user"`
+}
 
-// 	if err != nil {
-// 		c.JSON(http.StatusNotFound, errorResponse(err))
-// 		return
-// 	}
 
-// 	arg := db.GetUserParams{
-// 		PhoneNumber:    req.PhoneNumber,
-// 		HashedPassword: hashedPassword,
-// 	}
 
-// 	user, err := server.store.GetUser(c, arg)
+func (server *Server) loginUser(c *gin.Context) {
+	var req loginUserRequest
 
-// 	if hashedPassword != user.HashedPassword {
-// 		c.JSON(http.StatusNotFound, errorResponse(err))
-// 		return
-// 	}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
 
-// 	if err != nil {
-// 		if err == sql.ErrNoRows {
-// 			c.JSON(http.StatusNotFound, errorResponse(err))
-// 			return
-// 		}
-// 		c.JSON(http.StatusInternalServerError, errorResponse(err))
-// 		return
-// 	}
-// 	c.JSON(http.StatusOK, user)
-// }
+	user, err := server.store.GetUser(c, req.Phonenumber)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(http.StatusNotFound, errorResponse(err))
+			return
+		}
+		c.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	err = util.CheckPassword(req.Password, user.HashedPassword)
+    if err != nil {
+        c.JSON(http.StatusUnauthorized, errorResponse(err))
+        return
+    }
+
+	accessToken, err := server.tokenMaker.CreateToken(
+        user.PhoneNumber,
+        server.config.AccessTokenDuration,
+    )
+    if err != nil {
+        c.JSON(http.StatusInternalServerError, errorResponse(err))
+        return
+    }
+
+    rsp := loginUserResponse{
+        AccessToken: accessToken,
+        User:        newUserResponse(user),
+    }
+    c.JSON(http.StatusOK, rsp)
+}
