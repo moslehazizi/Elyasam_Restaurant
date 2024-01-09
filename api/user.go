@@ -14,15 +14,13 @@ import (
 type createUserRequest struct {
 	PhoneNumber string `json:"phone_number" binding:"required"`
 	Password    string `json:"hashed_password" binding:"required,min=6"`
-	FirstName   string `json:"first_name" binding:"required"`
-	LastName    string `json:"last_name" binding:"required"`
+	FullName    string `json:"full_name" binding:"required"`
 	Email       string `json:"email" binding:"required,email"`
 }
 
 type createUserResponse struct {
 	PhoneNumber string    `json:"phone_number"`
-	FirstName   string    `json:"first_name"`
-	LastName    string    `json:"last_name"`
+	FullName    string    `json:"full_name"`
 	Email       string    `json:"email"`
 	CreatedAt   time.Time `json:"created_at"`
 }
@@ -30,8 +28,7 @@ type createUserResponse struct {
 func newUserResponse(user db.User) userResponse {
 	return userResponse{
 		Phonenumber: user.PhoneNumber,
-		FirstName:   user.FirstName,
-		LastName:    user.LastName,
+		FullName:    user.FullName,
 		Email:       user.Email,
 		CreatedAt:   user.CreatedAt,
 	}
@@ -54,8 +51,7 @@ func (server *Server) createUser(c *gin.Context) {
 	arg := db.CreateUserParams{
 		PhoneNumber:    req.PhoneNumber,
 		HashedPassword: hashedPassword,
-		FirstName:      req.FirstName,
-		LastName:       req.LastName,
+		FullName:       req.FullName,
 		Email:          req.Email,
 	}
 
@@ -87,8 +83,7 @@ type loginUserRequest struct {
 type userResponse struct {
 	ID          int64     `json:"id"`
 	Phonenumber string    `json:"phone_number"`
-	FirstName   string    `json:"first_name"`
-	LastName    string    `json:"last_name"`
+	FullName    string    `json:"full_name"`
 	Email       string    `json:"email"`
 	CreatedAt   time.Time `json:"created_at"`
 }
@@ -97,8 +92,6 @@ type loginUserResponse struct {
 	AccessToken string       `json:"access_token"`
 	User        userResponse `json:"user"`
 }
-
-
 
 func (server *Server) loginUser(c *gin.Context) {
 	var req loginUserRequest
@@ -119,23 +112,23 @@ func (server *Server) loginUser(c *gin.Context) {
 	}
 
 	err = util.CheckPassword(req.Password, user.HashedPassword)
-    if err != nil {
-        c.JSON(http.StatusUnauthorized, errorResponse(err))
-        return
-    }
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, errorResponse(err))
+		return
+	}
 
 	accessToken, err := server.tokenMaker.CreateToken(
-        user.PhoneNumber,
-        server.config.AccessTokenDuration,
-    )
-    if err != nil {
-        c.JSON(http.StatusInternalServerError, errorResponse(err))
-        return
-    }
+		user.PhoneNumber,
+		server.config.AccessTokenDuration,
+	)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
 
-    rsp := loginUserResponse{
-        AccessToken: accessToken,
-        User:        newUserResponse(user),
-    }
-    c.JSON(http.StatusOK, rsp)
+	rsp := loginUserResponse{
+		AccessToken: accessToken,
+		User:        newUserResponse(user),
+	}
+	c.JSON(http.StatusOK, rsp)
 }

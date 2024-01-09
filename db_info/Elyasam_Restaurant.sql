@@ -2,8 +2,7 @@ CREATE TABLE "users" (
   "id" bigserial PRIMARY KEY,
   "phone_number" varchar UNIQUE NOT NULL,
   "hashed_password" varchar NOT NULL,
-  "first_name" varchar NOT NULL,
-  "last_name" varchar NOT NULL,
+  "full_name" varchar NOT NULL,
   "email" varchar NOT NULL,
   "created_at" timestamptz NOT NULL DEFAULT (now())
 );

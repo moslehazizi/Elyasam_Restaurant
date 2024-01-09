@@ -13,19 +13,17 @@ const createUser = `-- name: CreateUser :one
 INSERT INTO users(
     phone_number,
     hashed_password,
-    first_name,
-    last_name,
+    full_name,
     email
 ) VALUES (
-    $1, $2, $3, $4, $5
-) RETURNING id, phone_number, hashed_password, first_name, last_name, email, created_at
+    $1, $2, $3, $4
+) RETURNING id, phone_number, hashed_password, full_name, email, created_at
 `
 
 type CreateUserParams struct {
 	PhoneNumber    string `json:"phone_number"`
 	HashedPassword string `json:"hashed_password"`
-	FirstName      string `json:"first_name"`
-	LastName       string `json:"last_name"`
+	FullName       string `json:"full_name"`
 	Email          string `json:"email"`
 }
 
@@ -33,8 +31,7 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 	row := q.db.QueryRowContext(ctx, createUser,
 		arg.PhoneNumber,
 		arg.HashedPassword,
-		arg.FirstName,
-		arg.LastName,
+		arg.FullName,
 		arg.Email,
 	)
 	var i User
@@ -42,8 +39,7 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		&i.ID,
 		&i.PhoneNumber,
 		&i.HashedPassword,
-		&i.FirstName,
-		&i.LastName,
+		&i.FullName,
 		&i.Email,
 		&i.CreatedAt,
 	)
@@ -51,7 +47,7 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 }
 
 const getUser = `-- name: GetUser :one
-SELECT id, phone_number, hashed_password, first_name, last_name, email, created_at FROM users
+SELECT id, phone_number, hashed_password, full_name, email, created_at FROM users
 WHERE phone_number = $1
 LIMIT 1
 `
@@ -63,8 +59,7 @@ func (q *Queries) GetUser(ctx context.Context, phoneNumber string) (User, error)
 		&i.ID,
 		&i.PhoneNumber,
 		&i.HashedPassword,
-		&i.FirstName,
-		&i.LastName,
+		&i.FullName,
 		&i.Email,
 		&i.CreatedAt,
 	)
