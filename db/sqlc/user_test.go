@@ -44,12 +44,7 @@ func TestCreateUser(t *testing.T) {
 func TestGetUser(t *testing.T) {
 	user_1 := createRandomUser(t)
 
-	arg := GetUserParams{
-		PhoneNumber: user_1.PhoneNumber,
-		HashedPassword: user_1.HashedPassword,
-	}
-
-	user_2, err := testQueries.GetUser(context.Background(), arg)
+	user_2, err := testQueries.GetUser(context.Background(), user_1.PhoneNumber)
 
 	require.NoError(t, err)
 	require.NotEmpty(t, user_2)
