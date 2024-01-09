@@ -367,6 +367,43 @@ ALTER SEQUENCE public.slider_images_id_seq OWNED BY public.slider_images.id;
 
 
 --
+-- Name: users; Type: TABLE; Schema: public; Owner: mosleh
+--
+
+CREATE TABLE public.users (
+    id bigint NOT NULL,
+    phone_number character varying NOT NULL,
+    hashed_password character varying NOT NULL,
+    full_name character varying NOT NULL,
+    email character varying NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE public.users OWNER TO mosleh;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: mosleh
+--
+
+CREATE SEQUENCE public.users_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.users_id_seq OWNER TO mosleh;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: mosleh
+--
+
+ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
+
+
+--
 -- Name: categories id; Type: DEFAULT; Schema: public; Owner: mosleh
 --
 
@@ -618,6 +655,18 @@ COPY public.slider_images (id, image_path) FROM stdin;
 
 
 --
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: mosleh
+--
+
+COPY public.users (id, phone_number, hashed_password, full_name, email, created_at) FROM stdin;
+1	09186645434	$2a$10$V04dNlqc0njvaIZ20TCsnuceGoNx5LTvkugIG7I/fH1jj7sPLHDle	مصلح عزیزی	moslehazizi@gmail.com	2024-01-09 12:45:09.472634+00
+2	09184521306	$2a$10$QsMLIuxZXh8hnLNJBS4Gd.P5xxoEz2z5jBZsnP1lU/aISwB349c6W	مصلح عزیزی	moslehazizi@gmail.com	2024-01-09 12:45:43.862801+00
+3	09101231234	$2a$10$fwiyeJz8psf28Kz3XHg02.h4lgQzBB.F9wgB6tcNOJjhB0S4uI2zG	نوشین	nooshin@gmail.com	2024-01-09 12:46:16.926931+00
+4	09181234567	$2a$10$eIJbtix00BxmR01dkCptGuJw82sb5DkrqwYBVOc.XCTnOkJHF83qa	مرضیه	marziyeh@gmail.com	2024-01-09 12:46:40.636263+00
+\.
+
+
+--
 -- Name: categories_id_seq; Type: SEQUENCE SET; Schema: public; Owner: mosleh
 --
 
@@ -650,6 +699,13 @@ SELECT pg_catalog.setval('public.services_id_seq', 1, false);
 --
 
 SELECT pg_catalog.setval('public.slider_images_id_seq', 5, true);
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: mosleh
+--
+
+SELECT pg_catalog.setval('public.users_id_seq', 4, true);
 
 
 --
@@ -698,6 +754,22 @@ ALTER TABLE ONLY public.services
 
 ALTER TABLE ONLY public.slider_images
     ADD CONSTRAINT slider_images_pkey PRIMARY KEY (id);
+    
+
+--
+-- Name: users users_phone_number_key; Type: CONSTRAINT; Schema: public; Owner: mosleh
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_phone_number_key UNIQUE (phone_number);
+
+
+--
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: mosleh
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
 
 
 --
