@@ -17,7 +17,6 @@ type getServiceRequest struct {
 var discountOfferStruct []db.DiscountOffer
 
 func (server *Server) getServiceById(c *gin.Context) {
-
 	var req getServiceRequest
 	if err := c.ShouldBindUri(&req); err != nil {
 		c.JSON(http.StatusBadRequest, errorResponse(err))
@@ -34,7 +33,6 @@ func (server *Server) getServiceById(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, service)
-
 }
 
 type postServiceRequest struct {
@@ -144,20 +142,12 @@ func (server *Server) getRandomServices(c *gin.Context) []db.DiscountOffer {
 	if time.Now().Compare(discountOfferStruct[1].ExpiredAt) == 1 || time.Now().Compare(discountOfferStruct[1].ExpiredAt) == 0 {
 		server.deleteDiscountOffers(c)
 		server.makeListOfdiscounts(c)
-		// c.JSON(http.StatusOK, gin.H{
-		// 	"Discount offers": discountOfferStruct,
-		// })
-	} else if time.Now().Compare(discountOfferStruct[1].ExpiredAt) == -1 {
-		// c.JSON(http.StatusOK, gin.H{
-		// 	"Discount offers": discountOfferStruct,
-		// })
 	}
 	return discountOfferStruct
 }
 
 // create new items for discountOfferStruct.
 func (server *Server) makeListOfdiscounts(c *gin.Context) {
-
 	arg := db.ListServicesByIdParams{
 		Limit:  123,
 		Offset: 0,
@@ -178,14 +168,14 @@ func (server *Server) makeListOfdiscounts(c *gin.Context) {
 			c.JSON(http.StatusInternalServerError, errorResponse(err))
 			return
 		}
-		discountOfferStruct = append(discountOfferStruct, discount_create_offer)
+		discountOfferStruct[i] = discount_create_offer
 	}
 }
 
 // Delete items on discountOfferStruct that expired
 func (server *Server) deleteDiscountOffers(c *gin.Context) {
-	for _, discountForDelte := range discountOfferStruct {
-		err := server.store.DeleteDiscountOffer(c, discountForDelte.ID)
+	for _, discountForDelete := range discountOfferStruct {
+		err := server.store.DeleteDiscountOffer(c, discountForDelete.ID)
 		if err != nil {
 			if err == sql.ErrNoRows {
 				c.JSON(http.StatusNotFound, errorResponse(err))
